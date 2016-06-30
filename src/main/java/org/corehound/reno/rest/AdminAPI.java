@@ -2,9 +2,11 @@ package org.corehound.reno.rest;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
@@ -29,9 +31,9 @@ public class AdminAPI {
 	private AdminService adminService = AdapterFactory.getAdminService();
 	
 	@PUT
-	@Path("/index/{indexName}")
+	@Path("/index/{name}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response updateIndex(final @PathParam("indexName") String indexName, final InputStream incomingData) {	
+	public Response updateIndex(final @PathParam("name") String indexName, final InputStream incomingData) {	
 		return RestUtils.run(new Execution() {
 			public Object execute() throws IOException, SearchException {
 				String definition = IOUtils.toString(incomingData);
@@ -53,9 +55,9 @@ public class AdminAPI {
 	}
 	
 	@DELETE
-	@Path("/index/{indexName}")
+	@Path("/index/{name}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response deleteIndex(final @PathParam("indexName") String indexName) {	
+	public Response deleteIndex(final @PathParam("name") String indexName) {	
 		return RestUtils.run(new Execution() {
 			public Object execute() throws IOException, SearchException {
 				logger.debug("delete:/index/" + indexName);
@@ -73,5 +75,37 @@ public class AdminAPI {
 				return result;
 			}
 		});
+	}
+	
+	@GET
+	@Path("/index/{name}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getIndexDefinition(final @PathParam("name") String indexName){
+		return RestUtils.run(new Execution() {
+			public Object execute() throws IOException, SearchException {
+				logger.debug("get:/index/" + indexName);
+				
+				String result = adminService.getIndexDefinition(indexName);
+				
+				logger.debug("get:/index/" + indexName + " : OUTGOING JSON : " + result);
+				return result;
+			}
+		});
+	}
+	
+	@GET
+	@Path("/indexes")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getIndexNames() {	
+		return RestUtils.run(new Execution() {
+			public Object execute() throws IOException, SearchException {
+				logger.debug("get:/indexes");
+				
+				List<String> result = adminService.getIndexNames();
+				
+				logger.debug("delete:/indexes : OUTGOING JSON : " + result);
+				return result;
+			}
+		});	
 	}
 }
