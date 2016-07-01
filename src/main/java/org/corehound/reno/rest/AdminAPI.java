@@ -103,9 +103,49 @@ public class AdminAPI {
 				
 				List<String> result = adminService.getIndexNames();
 				
-				logger.debug("delete:/indexes : OUTGOING JSON : " + result);
+				logger.debug("get:/indexes : OUTGOING JSON : " + result);
 				return result;
 			}
 		});	
+	}
+	
+	@PUT
+	@Path("/index/{name}/synonyms")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response updateSynonyms(final @PathParam("name") String indexName, final InputStream incomingData) {	
+		return RestUtils.run(new Execution() {
+			public Object execute() throws IOException, SearchException {
+				String synonyms = IOUtils.toString(incomingData);
+				logger.debug("update:/index/" + indexName + "/synonyms : INCOMING DATA : " + synonyms);
+				
+				String result = "OK";
+				
+				try {
+				   adminService.updateSynonyms(indexName, synonyms);
+				} catch (AdminException e) {
+					logger.error("Update synonyms failed. ", e);
+					result = e.getMessage();
+				}
+				
+				logger.debug("update:/index/" + indexName + "/synonyms : OUTGOING JSON : " + result);
+				return result;
+			}
+		});
+	}
+	
+	@GET
+	@Path("/index/{name}/synonyms")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getSynonyms(final @PathParam("name") String indexName){
+		return RestUtils.run(new Execution() {
+			public Object execute() throws IOException, SearchException {
+				logger.debug("get:/index/" + indexName + "/synonyms");
+				
+				String result = adminService.getSynonyms(indexName);
+				
+				logger.debug("get:/index/" + indexName + "/synonyms : OUTGOING JSON : " + result);
+				return result;
+			}
+		});
 	}
 }
