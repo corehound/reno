@@ -4,7 +4,7 @@ import java.util.List;
 
 public interface AdminService {
 	
-	void updateIndex(String name, String definition) throws AdminException;
+	void createIndex(String name, String definition) throws AdminException;
 	
 	void deleteIndex(String name) throws AdminException;
 	

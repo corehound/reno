@@ -30,25 +30,25 @@ public class AdminAPI {
 	
 	private AdminService adminService = AdapterFactory.getAdminService();
 	
-	@PUT
+	@POST
 	@Path("/index/{name}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response updateIndex(final @PathParam("name") String indexName, final InputStream incomingData) {	
+	public Response createIndex(final @PathParam("name") String indexName, final InputStream incomingData) {	
 		return RestUtils.run(new Execution() {
 			public Object execute() throws IOException, SearchException {
 				String definition = IOUtils.toString(incomingData);
-				logger.debug("update:/index/" + indexName + " : INCOMING DATA : " + definition);
+				logger.debug("create:/index/" + indexName + " : INCOMING DATA : " + definition);
 				
 				String result = "OK";
 				
 				try {
-				   adminService.updateIndex(indexName, definition);
+				   adminService.createIndex(indexName, definition);
 				} catch (AdminException e) {
-					logger.error("Update index failed. ", e);
+					logger.error("Create index failed. ", e);
 					result = e.getMessage();
 				}
 				
-				logger.debug("update:/index/" + indexName + " : OUTGOING JSON : " + result);
+				logger.debug("create:/index/" + indexName + " : OUTGOING JSON : " + result);
 				return result;
 			}
 		});
