@@ -12,8 +12,8 @@ public interface AdminService {
 	
 	List<String> getIndexNames();
 	
-	void updateSynonyms(String indexName, String synonyms) throws AdminException;
+	void updateSynonyms(String indexName, List<List<String>> synonyms) throws AdminException;
 	
-	String getSynonyms(String indexName);
+	List<List<String>> getSynonyms(String indexName);
 	
 }

@@ -23,6 +23,8 @@ import org.corehound.reno.adapter.search.SearchException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 @Path("/admin")
 public class AdminAPI {
 	
@@ -103,8 +105,11 @@ public class AdminAPI {
 				
 				List<String> result = adminService.getIndexNames();
 				
-				logger.debug("get:/indexes : OUTGOING JSON : " + result);
-				return result;
+				ObjectMapper mapper = new ObjectMapper();
+				String jsonResult = mapper.writeValueAsString(result);
+				
+				logger.debug("get:/indexes : OUTGOING JSON : " + jsonResult);
+				return jsonResult;
 			}
 		});	
 	}
@@ -112,10 +117,9 @@ public class AdminAPI {
 	@PUT
 	@Path("/index/{name}/synonyms")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response updateSynonyms(final @PathParam("name") String indexName, final InputStream incomingData) {	
+	public Response updateSynonyms(final @PathParam("name") String indexName, final List<List<String>> synonyms) {	
 		return RestUtils.run(new Execution() {
 			public Object execute() throws IOException, SearchException {
-				String synonyms = IOUtils.toString(incomingData);
 				logger.debug("update:/index/" + indexName + "/synonyms : INCOMING DATA : " + synonyms);
 				
 				String result = "OK";
@@ -141,10 +145,12 @@ public class AdminAPI {
 			public Object execute() throws IOException, SearchException {
 				logger.debug("get:/index/" + indexName + "/synonyms");
 				
-				String result = adminService.getSynonyms(indexName);
+				List<List<String>> result = adminService.getSynonyms(indexName);
+				ObjectMapper mapper = new ObjectMapper();
+				String jsonResult = mapper.writeValueAsString(result);
 				
-				logger.debug("get:/index/" + indexName + "/synonyms : OUTGOING JSON : " + result);
-				return result;
+				logger.debug("get:/index/" + indexName + "/synonyms : OUTGOING JSON : " + jsonResult);
+				return jsonResult;
 			}
 		});
 	}
