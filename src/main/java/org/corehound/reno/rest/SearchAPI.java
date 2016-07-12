@@ -32,14 +32,7 @@ public class SearchAPI {
 				String query = IOUtils.toString(incomingData);
 				logger.debug("/search : INCOMING JSON : " + query);
 				
-				String result;
-				
-				try {
-				   result = searchWrapper.search(query);		
-				} catch (SearchException e) {
-					logger.error("Search failed. ", e);	
-					result = e.getMessage();
-				}
+				String result = searchWrapper.search(query);
 				
 				logger.debug("/search : OUTGOING JSON : " + result);
 				return result;

@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
-import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -18,7 +17,6 @@ import javax.ws.rs.core.Response;
 import org.corehound.reno.adapter.AdapterFactory;
 import org.corehound.reno.adapter.admin.AdminException;
 import org.corehound.reno.adapter.admin.AdminService;
-import org.corehound.reno.adapter.index.IndexException;
 import org.corehound.reno.adapter.search.SearchException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,18 +35,12 @@ public class AdminAPI {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response createIndex(final @PathParam("name") String indexName, final InputStream incomingData) {	
 		return RestUtils.run(new Execution() {
-			public Object execute() throws IOException, SearchException {
+			public Object execute() throws IOException, AdminException {
 				String definition = IOUtils.toString(incomingData);
 				logger.debug("create:/index/" + indexName + " : INCOMING DATA : " + definition);
 				
 				String result = "OK";
-				
-				try {
-				   adminService.createIndex(indexName, definition);
-				} catch (AdminException e) {
-					logger.error("Create index failed. ", e);
-					result = e.getMessage();
-				}
+				adminService.createIndex(indexName, definition);
 				
 				logger.debug("create:/index/" + indexName + " : OUTGOING JSON : " + result);
 				return result;
@@ -61,17 +53,11 @@ public class AdminAPI {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response deleteIndex(final @PathParam("name") String indexName) {	
 		return RestUtils.run(new Execution() {
-			public Object execute() throws IOException, SearchException {
+			public Object execute() throws IOException, AdminException {
 				logger.debug("delete:/index/" + indexName);
 				
 				String result = "OK";
-				
-				try {
-				   adminService.deleteIndex(indexName);
-				} catch (AdminException e) {
-					logger.error("Delete index failed. ", e);
-					result = e.getMessage();
-				}
+				adminService.deleteIndex(indexName);
 				
 				logger.debug("delete:/index/" + indexName + " : OUTGOING JSON : " + result);
 				return result;
@@ -84,7 +70,7 @@ public class AdminAPI {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getIndexDefinition(final @PathParam("name") String indexName){
 		return RestUtils.run(new Execution() {
-			public Object execute() throws IOException, SearchException {
+			public Object execute() throws IOException, AdminException {
 				logger.debug("get:/index/" + indexName);
 				
 				String result = adminService.getIndexDefinition(indexName);
@@ -100,7 +86,7 @@ public class AdminAPI {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getIndexNames() {	
 		return RestUtils.run(new Execution() {
-			public Object execute() throws IOException, SearchException {
+			public Object execute() throws IOException, AdminException {
 				logger.debug("get:/indexes");
 				
 				List<String> result = adminService.getIndexNames();
@@ -119,17 +105,11 @@ public class AdminAPI {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response updateSynonyms(final @PathParam("name") String indexName, final List<List<String>> synonyms) {	
 		return RestUtils.run(new Execution() {
-			public Object execute() throws IOException, SearchException {
+			public Object execute() throws IOException, AdminException {
 				logger.debug("update:/index/" + indexName + "/synonyms : INCOMING DATA : " + synonyms);
 				
 				String result = "OK";
-				
-				try {
-				   adminService.updateSynonyms(indexName, synonyms);
-				} catch (AdminException e) {
-					logger.error("Update synonyms failed. ", e);
-					result = e.getMessage();
-				}
+				adminService.updateSynonyms(indexName, synonyms);
 				
 				logger.debug("update:/index/" + indexName + "/synonyms : OUTGOING JSON : " + result);
 				return result;
@@ -142,7 +122,7 @@ public class AdminAPI {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getSynonyms(final @PathParam("name") String indexName){
 		return RestUtils.run(new Execution() {
-			public Object execute() throws IOException, SearchException {
+			public Object execute() throws IOException, AdminException {
 				logger.debug("get:/index/" + indexName + "/synonyms");
 				
 				List<List<String>> result = adminService.getSynonyms(indexName);

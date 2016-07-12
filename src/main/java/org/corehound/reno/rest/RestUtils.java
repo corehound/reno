@@ -15,7 +15,7 @@ public class RestUtils {
 			if(response != null){
 				return Response.status(200).entity(response).build();
 			}
-			return Response.status(200).entity(response).build();
+			return Response.status(200).build();
 		} catch (Exception e){
 			logger.error(e.getMessage(), e);
 			return Response.status(500).entity(e.getMessage()).build();

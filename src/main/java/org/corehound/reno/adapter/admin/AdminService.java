@@ -8,12 +8,12 @@ public interface AdminService {
 	
 	void deleteIndex(String name) throws AdminException;
 	
-	String getIndexDefinition(String name);
+	String getIndexDefinition(String name) throws AdminException;
 	
-	List<String> getIndexNames();
+	List<String> getIndexNames() throws AdminException;
 	
 	void updateSynonyms(String indexName, List<List<String>> synonyms) throws AdminException;
 	
-	List<List<String>> getSynonyms(String indexName);
+	List<List<String>> getSynonyms(String indexName) throws AdminException;
 	
 }

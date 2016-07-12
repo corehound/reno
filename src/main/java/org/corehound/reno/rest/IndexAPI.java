@@ -5,6 +5,7 @@ import java.io.InputStream;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
@@ -24,23 +25,16 @@ public class IndexAPI {
 	
 	private IndexWrapper indexWrapper = PluginFactory.getIndexWrapper();
 	
-	@POST
+	@PUT
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response index(final InputStream incomingData) {	
 		return RestUtils.run(new Execution() {
-			public Object execute() throws IOException, SearchException {
+			public Object execute() throws IOException, IndexException {
 				String index = IOUtils.toString(incomingData);
 				logger.debug("/index : INCOMING JSON : " + index);
 				
-				String result;
-				
-				try {
-				   result = indexWrapper.index(index);		
-				} catch (IndexException e) {
-					logger.error("Index failed. ", e);	
-					result = e.getMessage();
-				}
-				
+				String result = indexWrapper.index(index);
+	
 				logger.debug("/index : OUTGOING JSON : " + result);
 				return result;
 			}
