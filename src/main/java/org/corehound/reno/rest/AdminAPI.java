@@ -103,13 +103,16 @@ public class AdminAPI {
 	@PUT
 	@Path("/index/{name}/synonyms")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response updateSynonyms(final @PathParam("name") String indexName, final List<List<String>> synonyms) {	
+	public Response updateSynonyms(final @PathParam("name") String indexName, final InputStream incomingData) {	
 		return RestUtils.run(new Execution() {
 			public Object execute() throws IOException, AdminException {
+				String synonyms = IOUtils.toString(incomingData);
+				ObjectMapper mapper = new ObjectMapper();
+				List<List<String>> list = mapper.readValue(synonyms, List.class);
 				logger.debug("update:/index/" + indexName + "/synonyms : INCOMING DATA : " + synonyms);
 				
 				String result = "OK";
-				adminService.updateSynonyms(indexName, synonyms);
+				adminService.updateSynonyms(indexName, list);
 				
 				logger.debug("update:/index/" + indexName + "/synonyms : OUTGOING JSON : " + result);
 				return result;
