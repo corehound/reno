@@ -15,9 +15,5 @@ public interface AdminService {
 	void updateSynonyms(String indexName, List<List<String>> synonyms) throws AdminException;
 	
 	List<List<String>> getSynonyms(String indexName) throws AdminException;
-	
-	void updateKeywords(String indexName, List<String> keywords) throws AdminException;
-	
-	List<String> getKeywords(String indexName) throws AdminException;
-	
+		
 }

@@ -138,41 +138,5 @@ public class AdminAPI {
 		});
 	}
 	
-	@PUT
-	@Path("/index/{name}/keywords")
-	@Produces(MediaType.APPLICATION_JSON)
-	public Response updateKeywords(final @PathParam("name") String indexName, final InputStream incomingData) {	
-		return RestUtils.run(new Execution() {
-			public Object execute() throws IOException, AdminException {
-				String synonyms = IOUtils.toString(incomingData);
-				ObjectMapper mapper = new ObjectMapper();
-				List<String> list = mapper.readValue(synonyms, List.class);
-				logger.debug("update:/index/" + indexName + "/keywords : INCOMING DATA : " + synonyms);
-				
-				String result = "OK";
-				adminService.updateKeywords(indexName, list);
-				
-				logger.debug("update:/index/" + indexName + "/keywords : OUTGOING JSON : " + result);
-				return result;
-			}
-		});
-	}
 	
-	@GET
-	@Path("/index/{name}/keywords")
-	@Produces(MediaType.APPLICATION_JSON)
-	public Response getKeywords(final @PathParam("name") String indexName){
-		return RestUtils.run(new Execution() {
-			public Object execute() throws IOException, AdminException {
-				logger.debug("get:/index/" + indexName + "/keywords");
-				
-				List<String> result = adminService.getKeywords(indexName);
-				ObjectMapper mapper = new ObjectMapper();
-				String jsonResult = mapper.writeValueAsString(result);
-				
-				logger.debug("get:/index/" + indexName + "/keywords : OUTGOING JSON : " + jsonResult);
-				return jsonResult;
-			}
-		});
-	}
 }
